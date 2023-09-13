@@ -16,40 +16,17 @@ contract TOTP {
         _;
     }
 
-    function validateTOTP(bytes calldata _encryptedTOTP, uint8 timestamp) public view {
+    function timestampView() public view returns (uint256) {
+        return block.timestamp;
+    }
+
+    function validateTOTP(uint256 _encryptedTOTP, uint256 timestamp) public view returns(bool, uint256){
         require(timestamp <= block.timestamp - 1000, "Timestamp not within range");
         euint8 encryptedTOTP = TFHE.asEuint8(_encryptedTOTP);
         ebool isValid = TFHE.eq(encryptedTOTP, TFHE.mul(TFHE.asEuint8(timestamp), secretKey));
-        TFHE.req(isValid);
+        TFHE.optReq(isValid);
         // TODO: send message back to EVM chain via general messaging protocol
         // Send back bool and timestamp
+        return (TFHE.decrypt(isValid), block.timestamp);
     }
 }
-
-
-/*
-
-contract SmartWallet {
-
-    uint256 lastTOTP = timestamp
-    address MAILBOX = 0x...ABC
-
-    constructor(_mailbox) {
-        MAILBOX = _mailbox
-    }
-
-    function execute() {
-        require(timestamp + 3600 < block.timestamp, "Need OTP")
-        return true;
-    }
-
-    function receiveOTP() {
-        require(msg.owner == MAILBOX, "only mailbx");
-        (bool, timestamp) = message..
-        if (bool) {
-            lastTOTP = timestamp;
-        }
-    }
-}
-
-/*
