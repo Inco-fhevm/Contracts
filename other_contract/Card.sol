@@ -52,7 +52,6 @@ contract Card {
     function CardGet(address user) public {
         HiddenCard _Hiddencard = HiddenCard(hiddencard);
 
-        // uint32 _label = 32;
         bytes memory _callback = abi.encodePacked(this.cardReceive.selector);
 
         messageId = IInterchainExecuteRouter(iexRouter).callRemote(

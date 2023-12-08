@@ -33,16 +33,16 @@ contract CardDealer is EIP712WithModifier {
     address card;
     address iacRouter;
     bytes32 messageId;
-    address scroll_contract;
+    address remote_contract;
 
     constructor() EIP712WithModifier("Authorization token", "1") {
     }
 
-    function initialize(uint32 _DestinationDomain, address _card, address _iacRouter, address _scroll_contract) public {
+    function initialize(uint32 _DestinationDomain, address _card, address _iacRouter, address _remote_contract) public {
         DestinationDomain = _DestinationDomain;
         card = _card;
         iacRouter = _iacRouter;
-        scroll_contract = _scroll_contract;
+        remote_contract = _remote_contract;
     }
 
     // A random encrypted uint8 is generated
@@ -55,7 +55,7 @@ contract CardDealer is EIP712WithModifier {
     }
 
     function returnCard(address user) external view returns (uint8) {
-        require(scroll_contract == msg.sender, "not right scroll contract");
+        require(remote_contract == msg.sender, "not right remote contract");
         return TFHE.decrypt(encryptedCards[user]);
     }
 
@@ -76,8 +76,8 @@ contract CardDealer is EIP712WithModifier {
         return IInterchainAccountRouter(iacRouter).getRemoteInterchainAccount(DestinationDomain, _contract);
     }
 
-    function ScrollContractView() public view returns(address) {
-        return scroll_contract;
+    function remoteContractView() public view returns(address) {
+        return remote_contract;
     }
 
     // EIP 712 signature is required to prove that the user is requesting to view his/her own card
