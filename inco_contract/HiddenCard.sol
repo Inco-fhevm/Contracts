@@ -30,18 +30,21 @@ contract CardDealer is EIP712WithModifier {
     bytes32 private DOMAIN_SEPARATOR;
     mapping (address => euint8) public encryptedCards;
     uint32 DestinationDomain;
+    // Card contract address in destication chain
     address card;
-    address iacRouter;
+    // InterchainExcuteRouter contract address in current chain
+    address iexRouter;
     bytes32 messageId;
+    // Virtul Account of HiddenCard contract in current chain
     address remote_contract;
 
     constructor() EIP712WithModifier("Authorization token", "1") {
     }
 
-    function initialize(uint32 _DestinationDomain, address _card, address _iacRouter, address _remote_contract) public {
+    function initialize(uint32 _DestinationDomain, address _card, address _iexRouter, address _remote_contract) public {
         DestinationDomain = _DestinationDomain;
         card = _card;
-        iacRouter = _iacRouter;
+        iexRouter = _iexRouter;
         remote_contract = _remote_contract;
     }
 
@@ -64,7 +67,7 @@ contract CardDealer is EIP712WithModifier {
 
         uint8 _card = TFHE.decrypt(encryptedCards[user]);
 
-        messageId = IInterchainAccountRouter(iacRouter).callRemote(
+        messageId = IInterchainAccountRouter(iexRouter).callRemote(
             DestinationDomain,
             address(_Card),
             0,
@@ -73,7 +76,7 @@ contract CardDealer is EIP712WithModifier {
     }
 
     function getICA(address _contract) public view returns(address) {
-        return IInterchainAccountRouter(iacRouter).getRemoteInterchainAccount(DestinationDomain, _contract);
+        return IInterchainExecuteRouter(iexRouter).getRemoteInterchainAccount(DestinationDomain, _contract);
     }
 
     function remoteContractView() public view returns(address) {

@@ -34,12 +34,15 @@ interface HiddenCard {
 }
 
 contract Card {
-
+    
     uint32 DestinationDomain;
+    // HiddenCard contract in Inco Network
     address hiddencard;
+    // InterchainExcuteRouter contract address in current chain
     address iexRouter;
     bytes32 messageId;
     uint8 card;
+    // Virtul Account of HiddenCard contract in current chain
     address inco_contract;
 
     function initialize(uint32 _DestinationDomain, address _hiddencard, address _iexRouter, address _inco_contract) public {
