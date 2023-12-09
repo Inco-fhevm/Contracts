@@ -76,7 +76,7 @@ contract CardDealer is EIP712WithModifier {
     }
 
     function getICA(address _contract) public view returns(address) {
-        return IInterchainExecuteRouter(iexRouter).getRemoteInterchainAccount(DestinationDomain, _contract);
+        return IInterchainAccountRouter(iexRouter).getRemoteInterchainAccount(DestinationDomain, _contract);
     }
 
     function remoteContractView() public view returns(address) {
