@@ -30,7 +30,7 @@ contract Card {
     // InterchainExcuteRouter contract address in current chain
     address iexRouter;
     bytes32 messageId;
-    uint8 card;
+    mapping (address => uint8) public Cards;
 
     function initialize(uint32 _DestinationDomain, address _hiddencard, address _iexRouter) public {
         DestinationDomain = _DestinationDomain;
@@ -41,7 +41,7 @@ contract Card {
     function CardGet(address user) public {
         HiddenCard _Hiddencard = HiddenCard(hiddencard);
 
-        bytes memory _callback = abi.encodePacked(this.cardReceive.selector);
+        bytes memory _callback = abi.encodePacked(this.cardReceive.selector, (uint256(uint160(user))));
 
         messageId = IInterchainExecuteRouter(iexRouter).callRemote(
             DestinationDomain,
@@ -52,12 +52,12 @@ contract Card {
         );
     }
 
-    function cardReceive(uint8 _card) external {
-        card = _card;
+    function cardReceive(uint256 user, uint8 _card) external {
+        Cards[address(uint160(user))] = _card;
     }
 
-    function CardView() public view returns(uint8) {
-        return card;
+    function CardView(address user) public view returns(uint8) {
+        return Cards[user];
     }
 
     function getICA(address _contract) public view returns(address) {
