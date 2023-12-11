@@ -24,7 +24,7 @@ contract CreditScorePII is EIP712WithModifier {
         creditScores[user] = TFHE.asEuint32(encryptedCreditScore);
     }
 
-    function isUserScoreAbove700(address user) external view returns (bool) {
+    function isUserScoreAbove700(bytes calldata user) external view returns (bool) {
         ebool isAbove700Encrypted = TFHE.gt(creditScores[user], TFHE.asEuint32(700));
         return TFHE.decrypt(isAbove700Encrypted);
     }
