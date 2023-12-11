@@ -29,13 +29,15 @@ contract Card {
     address hiddencard;
     // InterchainExcuteRouter contract address in current chain
     address iexRouter;
+    address caller_contract;
     bytes32 messageId;
     mapping (address => uint8) public Cards;
 
-    function initialize(uint32 _DestinationDomain, address _hiddencard, address _iexRouter) public {
+    function initialize(uint32 _DestinationDomain, address _hiddencard, address _iexRouter, address _caller_contract) public {
         DestinationDomain = _DestinationDomain;
         hiddencard = _hiddencard;
         iexRouter = _iexRouter;
+        caller_contract = _caller_contract;
     }
 
     function CardGet(address user) public {
@@ -53,6 +55,7 @@ contract Card {
     }
 
     function cardReceive(uint256 user, uint8 _card) external {
+        require(caller_contract == msg.sender, "not right caller contract");
         Cards[address(uint160(user))] = _card;
     }
 
