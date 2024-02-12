@@ -9,7 +9,7 @@ contract CreditScorePII is EIP712WithModifier {
     // used for output authorization
     bytes32 private DOMAIN_SEPARATOR;
     address public trustedAgent;
-    mapping(address => euint8) internal creditScores;
+    mapping(address => euint16) internal creditScores;
     
     constructor() EIP712WithModifier("Authorization token", "1") {
         trustedAgent = msg.sender;
@@ -21,11 +21,11 @@ contract CreditScorePII is EIP712WithModifier {
     }
 
     function store(address user, bytes calldata encryptedCreditScore) external onlyAgent {
-        creditScores[user] = TFHE.asEuint8(encryptedCreditScore);
+        creditScores[user] = TFHE.asEuint16(encryptedCreditScore);
     }
 
     function isUserScoreAbove700(address user) external view returns (bool) {
-        ebool isAbove700Encrypted = TFHE.gt(creditScores[user], TFHE.asEuint8(700));
+        ebool isAbove700Encrypted = TFHE.gt(creditScores[user], TFHE.asEuint16(700));
         return TFHE.decrypt(isAbove700Encrypted);
         // TODO: send the decrypted boolean back to basename contract on Base via general messaging protocol
     }
