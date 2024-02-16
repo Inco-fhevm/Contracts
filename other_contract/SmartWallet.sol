@@ -54,7 +54,6 @@ contract SmartWallet {
 
     function receiveOTP(bool flag) public{
         require(msg.sender == iqsRouter, "only iqsRouter");
-        // (bool, timestamp) = message..
         if (flag) {
             lastTOTP = block.timestamp;
         } else {

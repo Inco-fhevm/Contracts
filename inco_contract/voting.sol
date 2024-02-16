@@ -54,7 +54,7 @@ contract Voting is EIP712WithModifier {
 
     // encryptedChoice can be 0 (against) or 1 (in favor)
     function _castVote(address voterAddress, uint256 proposalId, bytes calldata encryptedVoteCount, bytes calldata encryptedChoice) internal {
-        // require(!encryptedVotes[voterAddress].initialized, "Already voted");
+        require(!encryptedVotes[voterAddress].initialized, "Already voted");
         // uint256 encryptedVoteCount = IStorageProof.getTokenAmount(voterAddress, "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984");
         // TFHE.req(TFHE.gt(TFHE.asEuint8(tokenAmount), encryptedVoteCount));
         encryptedVotes[voterAddress] = EncryptedVote(TFHE.asEuint8(encryptedVoteCount), TFHE.asEuint8(encryptedChoice), true);
@@ -74,7 +74,7 @@ contract Voting is EIP712WithModifier {
         require(msg.sender == MAILBOX_ADDRESS, "Only Mailbox");
         // receive message from Mailbox
         // message package includes: voterAddress, proposalID, encryptedVoteCount, encryptedChoice
-        // _castVote(voterAddress, proposalId, encryptedVoteCount, encryptedChoice);
+        _castVote(voterAddress, proposalId, encryptedVoteCount, encryptedChoice);
     }
 
     function castVoteEIP712(uint256 proposalId, bytes calldata encryptedVoteCount, bytes calldata encryptedChoice, bytes calldata signature) public {

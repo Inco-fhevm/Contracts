@@ -1,4 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
+
+/* 
+This contract is an example contract to demonstrate 
+the cross-chain function call using ExcuteAPI 
+on the base chain.
+*/
+
 pragma solidity >=0.8.13 <0.9.0;
 
 interface IInterchainExecuteRouter {
