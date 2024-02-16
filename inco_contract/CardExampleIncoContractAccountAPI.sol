@@ -1,5 +1,11 @@
 // SPDX-License-Identifier: BSD-3-Clause-Clear
 
+/* 
+This contract is an example contract to demonstrate 
+the cross-chain function call using AccountAPI 
+on the inco chain.
+*/
+
 pragma solidity >=0.8.13 <0.9.0;
 
 import "fhevm/abstracts/EIP712WithModifier.sol";

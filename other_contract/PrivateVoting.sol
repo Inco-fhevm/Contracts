@@ -17,9 +17,9 @@ interface Voting {
 }
 
 contract PrivateVoting {
-    uint32 constant ethereumDomain = 9000;
-    address constant voting = 0x09bce27F2394Ae91049636566acFE7DceFb40CE3;
-    address constant iqsRouter = 0x3c91A95Cb8D32933Bffc273Aaa6Fb57473438D6f;
+    uint32 ethereumDomain;
+    address voting;
+    address iqsRouter ;
     bytes32 messageId;
     uint8 inFavorCount;
     uint8 againstCount;
@@ -27,6 +27,12 @@ contract PrivateVoting {
     modifier onlyCallback() {
         require(msg.sender == iqsRouter);
         _;
+    }
+
+    constructor(uint32 _ethereumDomain, address _voting, address _iqsRouter) {
+        ethereumDomain = _ethereumDomain;
+        voting = _voting;
+        iqsRouter = _iqsRouter;
     }
 
     function receiveVotingState(address user, uint8 _inFavorCount, uint8 _againstCount) onlyCallback() external {
