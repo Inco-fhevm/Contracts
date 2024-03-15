@@ -24,6 +24,14 @@ contract CreditScorePII is EIP712WithModifier {
         creditScores[user] = TFHE.asEuint16(encryptedCreditScore);
     }
 
+    // storeDemo is like store, but each user can set/update their own credit,
+    // score, bypassing the trusted agent's access control.
+    // This function is only used for demo purposes in Inco's Confidential DID
+    // demo application.
+    function storeDemo(bytes calldata encryptedCreditScore) external {
+        creditScores[msg.sender] = TFHE.asEuint16(encryptedCreditScore);
+    }
+
     function isUserScoreAbove700(address user) external view returns (bool) {
         ebool isAbove700Encrypted = TFHE.gt(creditScores[user], TFHE.asEuint16(700));
         return TFHE.decrypt(isAbove700Encrypted);
